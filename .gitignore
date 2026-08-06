@@ -1,0 +1,18 @@
+# Gradle Build Artifacts
+.gradle/
+build/
+out/
+
+# IDE Configuration
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+# OS Temp Files
+.DS_Store
+Thumbs.db
+
+# Log Files
+*.log
