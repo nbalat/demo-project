@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Registration - Organic Foods</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
+            color: #f8fafc;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+        h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; color: #ffffff; }
+        p.subtitle { font-size: 0.9rem; color: #94a3b8; margin-bottom: 24px; }
+
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
+        input[type="text"], input[type="email"], input[type="password"], input[type="tel"] {
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.92rem;
+            outline: none;
+        }
+
+        button.btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            font-size: 0.98rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
+            margin-top: 10px;
+        }
+
+        .footer-link { margin-top: 20px; text-align: center; font-size: 0.85rem; color: #94a3b8; }
+        .footer-link a { color: #34d399; text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Register Account</h1>
+        <p class="subtitle">Create a customer account to order organic foods.</p>
+
+        <form th:action="@{/register}" method="post">
+            <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="fullName" name="fullName" placeholder="e.g. Ramesh Patel" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="e.g. customer@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" placeholder="e.g. 9876543210" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Create Customer Account ➔</button>
+        </form>
+
+        <div class="footer-link">
+            Already registered? <a th:href="@{/login}">Sign In here</a>
+        </div>
+    </div>
+</body>
+</html>

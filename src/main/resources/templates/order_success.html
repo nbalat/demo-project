@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed Successfully</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
+            color: #f8fafc;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .success-icon {
+            width: 68px;
+            height: 68px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 2px solid #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: #10b981;
+            font-size: 2rem;
+        }
+        h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; color: #ffffff; }
+        p.subtitle { font-size: 0.9rem; color: #94a3b8; margin-bottom: 24px; }
+
+        .order-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.9rem;
+        }
+        .order-row:last-child { border-bottom: none; }
+        .row-label { color: #94a3b8; }
+        .row-value { font-weight: 700; color: #34d399; }
+
+        .btn-invoice {
+            display: block;
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
+            margin-bottom: 12px;
+        }
+        .btn-invoice:hover { background: #10b981; }
+
+        .btn-continue {
+            display: inline-block;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="success-icon">✓</div>
+        <h1>Order Placed Successfully!</h1>
+        <p class="subtitle">Thank you for shopping organic. Your order is confirmed.</p>
+
+        <div class="order-card">
+            <div class="order-row">
+                <span class="row-label">Order ID</span>
+                <span class="row-value" th:text="${order.orderId}">ORG-1001</span>
+            </div>
+            <div class="order-row">
+                <span class="row-label">Customer Name</span>
+                <span class="row-value" style="color: #ffffff;" th:text="${order.customerName}">Ramesh Patel</span>
+            </div>
+            <div class="order-row">
+                <span class="row-label">Payment Mode</span>
+                <span class="row-value" style="color: #f59e0b;" th:text="${order.paymentMode}">COD</span>
+            </div>
+            <div class="order-row">
+                <span class="row-label">Total Paid (COD)</span>
+                <span class="row-value" th:text="'Rs.' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">Rs.0.00</span>
+            </div>
+        </div>
+
+        <a th:href="@{/invoice/{orderId}(orderId=${order.orderId})}" class="btn-invoice">📄 Download Invoice PDF Bill</a>
+        <a th:href="@{/catalog}" class="btn-continue">⬅ Return to Store Catalog</a>
+    </div>
+
+</body>
+</html>

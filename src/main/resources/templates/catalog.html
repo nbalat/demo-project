@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organic & Natural Foods Storefront</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: #0f172a; color: #f8fafc; min-height: 100vh; }
+        
+        /* Navbar */
+        nav.navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-brand { font-size: 1.3rem; font-weight: 800; color: #34d399; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .nav-links { display: flex; align-items: center; gap: 16px; }
+        .nav-item { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; transition: background 0.15s ease; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.08); color: #ffffff; }
+        .btn-cart { background: #059669; color: #ffffff; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 6px; }
+        .btn-cart:hover { background: #10b981; }
+        .btn-admin { background: #d97706; color: #ffffff; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
+
+        /* Main Store Layout */
+        .container { max-width: 1200px; margin: 0 auto; padding: 28px 20px; }
+        
+        .hero-banner {
+            background: linear-gradient(135deg, #064e3b 0%, #047857 60%, #059669 100%);
+            border-radius: 18px;
+            padding: 32px 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 10px 30px rgba(4, 120, 87, 0.3);
+        }
+        .hero-banner h2 { font-size: 1.8rem; font-weight: 800; color: #ffffff; margin-bottom: 6px; }
+        .hero-banner p { font-size: 0.95rem; color: #a7f3d0; }
+
+        /* Filter Controls */
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .category-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+        .tab-btn {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: #059669;
+            color: #ffffff;
+            border-color: #059669;
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 22px;
+        }
+        .product-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .product-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4); }
+        .product-img { width: 100%; height: 170px; object-fit: cover; background: #1e293b; }
+        .product-body { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-category { font-size: 0.75rem; font-weight: 700; color: #34d399; text-transform: uppercase; margin-bottom: 4px; }
+        .product-title { font-size: 1.05rem; font-weight: 700; color: #ffffff; margin-bottom: 6px; line-height: 1.3; }
+        .product-desc { font-size: 0.82rem; color: #94a3b8; margin-bottom: 14px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        
+        .product-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .product-price { font-size: 1.15rem; font-weight: 800; color: #34d399; }
+        .product-unit { font-size: 0.8rem; color: #94a3b8; font-weight: 500; }
+        
+        .btn-add-cart {
+            background: #059669;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        .btn-add-cart:hover { background: #10b981; }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <nav class="navbar">
+        <a th:href="@{/catalog}" class="nav-brand">
+            🌱 Organic Foods Store
+        </a>
+        <div class="nav-links">
+            <span sec:authorize="isAuthenticated()" style="font-size: 0.85rem; color: #a7f3d0; font-weight: 600;">
+                Logged in: <span sec:authentication="name">user</span>
+            </span>
+            <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="@{/admin/dashboard}" class="btn-admin">👑 Admin Dashboard</a>
+            <a th:href="@{/cart}" class="btn-cart">🛒 Cart</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item">Logout</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="nav-item">Sign In</a>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+            <h2>Farm-Fresh Organic & Natural Foods</h2>
+            <p>Direct from organic farms: Grains, Chana, Desi Val, Vatana, Millets & Pure Spices.</p>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="filter-bar">
+            <div class="category-tabs">
+                <a th:href="@{/catalog(category='ALL')}" class="tab-btn" th:classappend="${selectedCategory == 'ALL' ? 'active' : ''}">All Items</a>
+                <a th:href="@{/catalog(category='Pulses')}" class="tab-btn" th:classappend="${selectedCategory == 'Pulses' ? 'active' : ''}">🫘 Pulses, Chana & Val</a>
+                <a th:href="@{/catalog(category='Millets')}" class="tab-btn" th:classappend="${selectedCategory == 'Millets' ? 'active' : ''}">🌾 Millets</a>
+                <a th:href="@{/catalog(category='Grains')}" class="tab-btn" th:classappend="${selectedCategory == 'Grains' ? 'active' : ''}">🌾 Grains & Rice</a>
+                <a th:href="@{/catalog(category='Spices')}" class="tab-btn" th:classappend="${selectedCategory == 'Spices' ? 'active' : ''}">🌶️ Spices</a>
+            </div>
+        </div>
+
+        <!-- Store Product Grid -->
+        <div class="product-grid">
+            <div th:each="prod : ${products}" class="product-card">
+                <img th:src="${prod.imageUrl}" alt="Product Image" class="product-img" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600'">
+                <div class="product-body">
+                    <div>
+                        <div class="product-category" th:text="${prod.category}">Pulses</div>
+                        <div class="product-title" th:text="${prod.name}">Organic Kabuli Chana</div>
+                        <div class="product-desc" th:text="${prod.description}">Fresh organic legumes.</div>
+                    </div>
+                    <div class="product-footer">
+                        <div>
+                            <span class="product-price" th:text="'Rs.' + ${#numbers.formatDecimal(prod.price, 1, 2)}">Rs.140.00</span>
+                            <span class="product-unit" th:text="'/ ' + ${prod.unit}">/ kg</span>
+                        </div>
+                        <form th:action="@{/cart/add/{id}(id=${prod.id})}" method="post">
+                            <button type="submit" class="btn-add-cart">+ Add Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
