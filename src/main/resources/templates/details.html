@@ -22,7 +22,7 @@
         }
         .container {
             width: 100%;
-            max-width: 460px;
+            max-width: 480px;
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -79,7 +79,7 @@
             font-weight: 600;
         }
         .info-value {
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #38bdf8;
             font-weight: 700;
         }
@@ -88,7 +88,7 @@
             border-left: 4px solid #3b82f6;
             padding: 12px 14px;
             border-radius: 6px;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             color: #e2e8f0;
             margin-bottom: 24px;
             text-align: left;
@@ -131,6 +131,10 @@
             <div class="info-row">
                 <span class="info-label">Phone Number</span>
                 <span class="info-value" th:text="${userPhone}">9876543210</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">🏆 Favorite FIFA Match</span>
+                <span class="info-value" style="color: #f59e0b;" th:text="${favoriteMatch}">Argentina vs France</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Status</span>

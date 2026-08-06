@@ -22,12 +22,12 @@
         }
         .container {
             width: 100%;
-            max-width: 440px;
+            max-width: 480px;
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 18px;
-            padding: 36px 30px;
+            padding: 32px 28px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
         .badge {
@@ -43,20 +43,20 @@
             margin-bottom: 12px;
         }
         h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: #ffffff;
         }
         p.subtitle {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             color: #94a3b8;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
-        label {
+        label.group-label {
             display: block;
             font-size: 0.85rem;
             font-weight: 600;
@@ -65,12 +65,12 @@
         }
         input[type="text"], input[type="tel"] {
             width: 100%;
-            padding: 12px 16px;
+            padding: 11px 14px;
             background: rgba(15, 23, 42, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 10px;
             color: #ffffff;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             outline: none;
             transition: all 0.2s ease;
         }
@@ -78,57 +78,103 @@
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
         }
+        .radio-group {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            cursor: pointer;
+        }
+        .radio-option input[type="radio"] {
+            accent-color: #3b82f6;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
         button {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
             color: #ffffff;
-            font-size: 1rem;
+            font-size: 0.98rem;
             font-weight: 700;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
             box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
-            margin-top: 10px;
+            margin-top: 14px;
         }
         button:hover {
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
         }
-        button:active {
-            transform: translateY(1px);
-        }
         .footer-note {
-            margin-top: 24px;
+            margin-top: 20px;
             text-align: center;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #64748b;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <span class="badge">🚀 Kotlin Spring Boot App</span>
-        <h1>Enter Details</h1>
-        <p class="subtitle">Please provide your name and phone number to proceed.</p>
+        <span class="badge">🚀 FIFA 2026 Edition</span>
+        <h1>Enter Details & Poll</h1>
+        <p class="subtitle">Provide your contact info and pick the most exciting match!</p>
 
         <form th:action="@{/submit}" method="post">
             <div class="form-group">
-                <label for="name">Full Name *</label>
+                <label class="group-label" for="name">Full Name *</label>
                 <input type="text" id="name" name="name" placeholder="e.g. Rahul Sharma" required autocomplete="off">
             </div>
 
             <div class="form-group">
-                <label for="phoneNumber">Phone Number *</label>
+                <label class="group-label" for="phoneNumber">Phone Number *</label>
                 <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="e.g. 9876543210" required autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label class="group-label">🏆 Most Exciting FIFA 2026 Match?</label>
+                <div class="radio-group">
+                    <label class="radio-option">
+                        <input type="radio" name="favoriteMatch" value="Argentina vs France" checked>
+                        <span>🇦🇷 Argentina vs France 🇫🇷</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="favoriteMatch" value="Brazil vs Germany">
+                        <span>🇧🇷 Brazil vs Germany 🇩🇪</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="favoriteMatch" value="Spain vs Portugal">
+                        <span>🇪🇸 Spain vs Portugal 🇵🇹</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="favoriteMatch" value="England vs Italy">
+                        <span>🏴󠁧󠁢󠁥󠁮󠁧󠁿 England vs Italy 🇮🇹</span>
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="favoriteMatch" value="Netherlands vs Argentina">
+                        <span>🇳🇱 Netherlands vs Argentina 🇦🇷</span>
+                    </label>
+                </div>
             </div>
 
             <button type="submit">Next ➔</button>
         </form>
 
         <div class="footer-note">
-            Docker & Git Learning Demo • 100% Kotlin JVM
+            Git Workflow Demo • Real-Time Code Sync
         </div>
     </div>
 </body>
