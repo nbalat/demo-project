@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
 import java.awt.Color as AwtColor
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.security.Principal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 
 @Controller
 class AuthController(
@@ -275,18 +277,55 @@ class AdminController(
     private val orderRepository: OrderRepository
 ) {
     @GetMapping("/dashboard")
-    fun dashboard(model: Model): String {
+    fun dashboard(
+        @RequestParam(name = "editId", required = false) editId: Long?,
+        model: Model
+    ): String {
         val products = productRepository.findAllByOrderByNameAsc()
         val orders = orderRepository.findAllByOrderByTimestampDesc()
 
+        val editingProduct = if (editId != null) {
+            productRepository.findById(editId).orElse(ProductEntity())
+        } else {
+            ProductEntity()
+        }
+
         model.addAttribute("products", products)
         model.addAttribute("orders", orders)
-        model.addAttribute("newProduct", ProductEntity())
+        model.addAttribute("product", editingProduct)
+        model.addAttribute("isEditing", editId != null)
         return "admin_dashboard"
     }
 
     @PostMapping("/product/save")
-    fun saveProduct(@ModelAttribute product: ProductEntity): String {
+    fun saveProduct(
+        @ModelAttribute product: ProductEntity,
+        @RequestParam("imageFile", required = false) imageFile: MultipartFile?
+    ): String {
+        // Handle image file upload if selected by admin
+        if (imageFile != null && !imageFile.isEmpty) {
+            val uploadDir = File("uploads")
+            if (!uploadDir.exists()) uploadDir.mkdirs()
+
+            val cleanOriginalName = imageFile.originalFilename?.replace("\\s+".toRegex(), "_") ?: "photo.jpg"
+            val uniqueFileName = "prod_${System.currentTimeMillis()}_$cleanOriginalName"
+            val destinationFile = File(uploadDir, uniqueFileName)
+
+            imageFile.transferTo(destinationFile)
+            product.imageUrl = "/uploads/$uniqueFileName"
+        } else if (product.id != null) {
+            // Keep existing image URL if not updating file
+            val existing = productRepository.findById(product.id!!).orElse(null)
+            if (existing != null && product.imageUrl.isBlank()) {
+                product.imageUrl = existing.imageUrl
+            }
+        }
+
+        // Set fallback default image if still blank
+        if (product.imageUrl.isBlank()) {
+            product.imageUrl = "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600"
+        }
+
         productRepository.save(product)
         return "redirect:/admin/dashboard"
     }

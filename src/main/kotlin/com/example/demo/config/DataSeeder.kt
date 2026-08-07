@@ -35,7 +35,7 @@ class DataSeeder(
 
         // 2. Seed 5 Customer Accounts
         val customers = listOf(
-            UserEntity(email = "user1@organic.com", password = userPassword, fullName = "Ramesh Patel", phone = "9876543220", role = "ROLE_USER"),
+            UserEntity(email = "user1@organic.com", password = userPassword, fullName = "Niraj ", phone = "9876543220", role = "ROLE_USER"),
             UserEntity(email = "user2@organic.com", password = userPassword, fullName = "Priya Sharma", phone = "9876543221", role = "ROLE_USER"),
             UserEntity(email = "user3@organic.com", password = userPassword, fullName = "Amit Kumar", phone = "9876543222", role = "ROLE_USER"),
             UserEntity(email = "user4@organic.com", password = userPassword, fullName = "Sanjay Verma", phone = "9876543223", role = "ROLE_USER"),
