@@ -53,6 +53,23 @@
                 <button type="submit" class="btn-primary btn-auth">Sign In</button>
             </form>
             
+            <!-- Quick Testing Login Buttons -->
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">Quick Test Login:</p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button onclick="fillAndSubmit('admin1@organic.com', 'admin123')" class="btn-admin" style="padding: 8px 16px; font-size: 0.8rem; cursor: pointer;">🧑‍💼 Admin Login</button>
+                    <button onclick="fillAndSubmit('user1@organic.com', 'user123')" class="btn-admin" style="padding: 8px 16px; font-size: 0.8rem; cursor: pointer; color: #34d399; border-color: rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.1);">👤 User Login</button>
+                </div>
+            </div>
+
+            <script>
+                function fillAndSubmit(email, password) {
+                    document.querySelector('input[name="email"]').value = email;
+                    document.querySelector('input[name="password"]').value = password;
+                    document.querySelector('form').submit();
+                }
+            </script>
+            
             <div style="margin-top: 24px; color: var(--text-muted); font-size: 0.95rem;">
                 Don't have an account? <a th:href="@{/register}" style="color: var(--accent); font-weight: 700; text-decoration: none;">Register here</a>
             </div>
