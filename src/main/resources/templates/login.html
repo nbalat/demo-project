@@ -3,174 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organic Foods - Sign In</title>
+    <title>Login - Patan Organic</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
-            color: #f8fafc;
-            padding: 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 480px;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 36px 32px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-        }
-        .badge {
-            display: inline-block;
-            background: rgba(16, 185, 129, 0.2);
-            color: #34d399;
-            font-size: 0.75rem;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 12px;
-        }
-        h1 { font-size: 1.7rem; font-weight: 700; margin-bottom: 6px; color: #ffffff; }
-        p.subtitle { font-size: 0.9rem; color: #94a3b8; margin-bottom: 24px; }
-
-        .quick-chips-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #34d399;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-        .chips-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 20px;
-            background: rgba(30, 41, 59, 0.6);
-            padding: 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .chip {
-            background: rgba(5, 150, 105, 0.25);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            color: #a7f3d0;
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 5px 10px;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.15s ease;
-        }
-        .chip:hover {
-            background: rgba(16, 185, 129, 0.45);
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-        .chip-admin {
-            background: rgba(217, 119, 6, 0.25);
-            border-color: rgba(245, 158, 11, 0.4);
-            color: #fde68a;
-        }
-        .chip-admin:hover {
-            background: rgba(245, 158, 11, 0.45);
-            color: #ffffff;
-        }
-
-        .form-group { margin-bottom: 18px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            color: #ffffff;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-        input:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25); }
-
-        button.btn-submit {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 700;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
-            margin-top: 10px;
-        }
-        button.btn-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(5, 150, 105, 0.5); }
-
-        .alert-danger {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid #ef4444;
-            color: #fca5a5;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-        }
-        .footer-link { margin-top: 20px; text-align: center; font-size: 0.85rem; color: #94a3b8; }
-        .footer-link a { color: #34d399; text-decoration: none; font-weight: 600; }
+        .auth-container { max-width: 450px; margin: 80px auto; }
+        .auth-card { padding: 40px; text-align: center; }
+        .auth-card h2 { font-size: 2rem; color: #ffffff; margin-bottom: 24px; }
+        .auth-card p { color: var(--text-muted); margin-bottom: 24px; }
+        
+        .alert { background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); padding: 12px; border-radius: 12px; margin-bottom: 24px; font-weight: 600; font-size: 0.9rem; }
+        .alert-success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        
+        .form-group { text-align: left; }
+        .btn-auth { width: 100%; justify-content: center; padding: 14px; font-size: 1.1rem; margin-top: 24px; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <span class="badge">🌿 100% Organic & Natural Foods</span>
-        <h1>Sign In to Store</h1>
-        <p class="subtitle">Access customer cart or admin product management.</p>
 
-        <!-- Quick 1-Click Test Credentials Chips -->
-        <div class="quick-chips-title">⚡ Quick 1-Click Test Login:</div>
-        <div class="chips-container">
-            <span class="chip chip-admin" onclick="fillCreds('admin1@organic.com', 'admin123')">👑 Admin 1</span>
-            <span class="chip chip-admin" onclick="fillCreds('admin2@organic.com', 'admin123')">👑 Admin 2</span>
-            <span class="chip chip-admin" onclick="fillCreds('admin3@organic.com', 'admin123')">👑 Admin 3</span>
-            <span class="chip" onclick="fillCreds('user1@organic.com', 'user123')">👤 User 1</span>
-            <span class="chip" onclick="fillCreds('user2@organic.com', 'user123')">👤 User 2</span>
-            <span class="chip" onclick="fillCreds('user3@organic.com', 'user123')">👤 User 3</span>
-        </div>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
-        <div th:if="${errorMessage}" class="alert-danger" th:text="${errorMessage}">Invalid credentials</div>
+    <div class="container auth-container">
+        <div class="card auth-card">
+            <h2>Welcome Back</h2>
+            <p>Sign in to your Patan Organic account to checkout faster and track your orders.</p>
 
-        <form th:action="@{/login}" method="post">
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="text" id="email" name="email" placeholder="e.g. user1@organic.com" required autocomplete="off">
+            <div th:if="${param.error}" class="alert">
+                Invalid Email or Password. Please try again.
+            </div>
+            
+            <div th:if="${param.logout}" class="alert alert-success">
+                You have been successfully logged out.
+            </div>
+            
+            <div th:if="${param.registered}" class="alert alert-success">
+                Registration successful! Please login below.
             </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="••••••••" required>
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required placeholder="you@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="••••••••">
+                </div>
+
+                <button type="submit" class="btn-primary btn-auth">Sign In</button>
+            </form>
+            
+            <div style="margin-top: 24px; color: var(--text-muted); font-size: 0.95rem;">
+                Don't have an account? <a th:href="@{/register}" style="color: var(--accent); font-weight: 700; text-decoration: none;">Register here</a>
             </div>
-
-            <button type="submit" class="btn-submit">Sign In ➔</button>
-        </form>
-
-        <div class="footer-link">
-            Don't have an account? <a th:href="@{/register}">Register Customer Account</a>
         </div>
     </div>
 
-    <script>
-        function fillCreds(email, pass) {
-            document.getElementById('email').value = email;
-            document.getElementById('password').value = pass;
-        }
-    </script>
 </body>
 </html>

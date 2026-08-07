@@ -4,147 +4,149 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart & Checkout</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: #0f172a; color: #f8fafc; min-height: 100vh; }
-        
-        nav.navbar {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 14px 28px;
+        .cart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 900px) {
+            .cart-grid { grid-template-columns: 1fr; }
+        }
+
+        .cart-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            transition: transform 0.2s ease;
         }
-        .nav-brand { font-size: 1.3rem; font-weight: 800; color: #34d399; text-decoration: none; }
-        .nav-item { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
+        .cart-item:hover { transform: translateX(4px); border-color: rgba(52, 211, 153, 0.3); }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 28px 20px; }
-        h1 { font-size: 1.6rem; font-weight: 800; color: #ffffff; margin-bottom: 20px; }
-
-        .cart-grid { display: grid; grid-template-columns: 1.2f 0.8f; gap: 24px; }
-        @media(max-width: 768px) { .cart-grid { grid-template-columns: 1fr; } }
-
-        .card { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 20px; }
-
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
-        .cart-item:last-child { border-bottom: none; }
-        .item-title { font-weight: 700; color: #ffffff; font-size: 0.95rem; }
-        .item-subtitle { font-size: 0.8rem; color: #94a3b8; }
-        .item-price { font-weight: 800; color: #34d399; font-size: 1rem; }
+        .item-info { display: flex; align-items: center; gap: 16px; }
+        .item-img { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
+        .item-title { font-size: 1.1rem; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        .item-price { color: var(--accent); font-weight: 600; font-size: 0.9rem; }
         
-        .btn-remove { color: #ef4444; text-decoration: none; font-size: 0.8rem; font-weight: 700; }
-
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 10px 14px;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 0.9rem;
-            outline: none;
-        }
-
-        .payment-radio-group { display: flex; flex-direction: column; gap: 8px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; }
-        .payment-option { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: #e2e8f0; cursor: pointer; }
-
+        .qty-controls { display: flex; align-items: center; gap: 12px; }
+        .qty-input { width: 80px; text-align: center; }
+        
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-muted); font-size: 0.95rem; }
+        .summary-total { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 800; color: #ffffff; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+        
         .btn-checkout {
-            width: 100%;
-            padding: 13px;
-            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
-            color: #ffffff;
+            background: var(--gradient-accent);
+            color: #022c22;
+            padding: 14px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
             font-size: 1rem;
-            font-weight: 700;
+            width: 100%;
+            display: block;
+            text-align: center;
             border: none;
-            border-radius: 10px;
             cursor: pointer;
-            box-shadow: 0 4px 14px rgba(5, 150, 105, 0.4);
-            margin-top: 14px;
+            margin-top: 24px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
-        .btn-checkout:hover { background: #10b981; }
+        .btn-checkout:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5); }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <a th:href="@{/catalog}" class="nav-brand">🌱 Organic Foods Store</a>
-        <a th:href="@{/catalog}" class="nav-item">⬅ Continue Shopping</a>
-    </nav>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
     <div class="container">
-        <h1>🛒 Your Shopping Cart</h1>
-
-        <div th:if="${#lists.isEmpty(cartItems)}" class="card" style="text-align: center; padding: 40px;">
-            <p style="font-size: 1.1rem; color: #94a3b8;">Your cart is empty!</p>
-            <a th:href="@{/catalog}" style="display: inline-block; margin-top: 14px; color: #34d399; font-weight: 700;">Browse Organic Foods Catalog ➔</a>
+        <h1 class="mb-4">🛒 Your Shopping Cart</h1>
+        
+        <div th:if="${cartItems.isEmpty()}" class="card text-center" style="padding: 60px;">
+            <h3 style="color: var(--text-muted); margin-bottom: 24px;">Your cart is empty</h3>
+            <a th:href="@{/catalog}" class="btn-primary" style="display: inline-block;">Browse Store</a>
         </div>
 
-        <div th:if="${!#lists.isEmpty(cartItems)}" class="cart-grid">
+        <div th:if="${!cartItems.isEmpty()}" class="cart-grid">
+            
             <!-- Cart Items List -->
-            <div class="card">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; color: #ffffff;">Order Items</h3>
-                
+            <div>
                 <div th:each="item : ${cartItems}" class="cart-item">
-                    <div>
-                        <div class="item-title" th:text="${item.product.name}">Organic Kabuli Chana</div>
-                        <div class="item-subtitle" th:text="'Rs.' + ${item.product.price} + ' / ' + ${item.product.unit} + ' x ' + ${item.quantity} + ' ' + ${item.product.unit}">Rs.140 / kg x 1 kg</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div class="item-price" th:text="'Rs.' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">Rs.140.00</div>
-                        <a th:href="@{/cart/remove/{id}(id=${item.product.id})}" class="btn-remove">Remove</a>
-                    </div>
-                </div>
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.15);">
-                    <span style="font-weight: 700; font-size: 1.1rem;">Total Amount:</span>
-                    <span style="font-weight: 800; font-size: 1.3rem; color: #34d399;" th:text="'Rs.' + ${#numbers.formatDecimal(totalAmount, 1, 2)}">Rs.0.00</span>
-                </div>
-            </div>
-
-            <!-- Checkout Form & Payment Selector -->
-            <div class="card">
-                <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; color: #ffffff;">Delivery & Payment Details</h3>
-
-                <form th:action="@{/checkout/process}" method="post">
-                    <div class="form-group">
-                        <label for="customerName">Full Name *</label>
-                        <input type="text" id="customerName" name="customerName" th:value="${currentUser != null ? currentUser.fullName : ''}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="customerPhone">Phone Number *</label>
-                        <input type="text" id="customerPhone" name="customerPhone" th:value="${currentUser != null ? currentUser.phone : ''}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="deliveryAddress">Delivery Address *</label>
-                        <textarea id="deliveryAddress" name="deliveryAddress" rows="2" placeholder="House No, Street, Landmark, City, Pincode" required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Select Payment Mode *</label>
-                        <div class="payment-radio-group">
-                            <label class="payment-option">
-                                <input type="radio" name="paymentMode" value="COD" checked>
-                                <span>💵 Cash on Delivery (COD) [Active]</span>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="paymentMode" value="UPI" disabled>
-                                <span style="opacity: 0.6;">📱 UPI / Scan QR (Integration Placeholder)</span>
-                            </label>
-                            <label class="payment-option">
-                                <input type="radio" name="paymentMode" value="CARD" disabled>
-                                <span style="opacity: 0.6;">💳 Credit / Debit Card (Integration Placeholder)</span>
-                            </label>
+                    <div class="item-info">
+                        <img th:src="${item.product.imageUrl}" class="item-img" alt="Product Image" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600'">
+                        <div>
+                            <div class="item-title" th:text="${item.product.name}">Kabuli Chana</div>
+                            <div class="item-price" th:text="'Rs.' + ${#numbers.formatDecimal(item.product.price, 1, 2)} + ' / ' + ${item.product.unit}">Rs.140.00 / kg</div>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-checkout">Place Order & Download Bill ➔</button>
-                </form>
+                    <div class="qty-controls">
+                        <form th:action="@{/cart/update/{id}(id=${item.product.id})}" method="post" style="display: flex; gap: 8px;">
+                            <input type="number" name="quantity" class="qty-input" th:value="${item.quantity}" step="0.1" min="0">
+                            <button type="submit" class="btn-admin" style="padding: 12px; font-size: 0.8rem;">Update</button>
+                        </form>
+                        <a th:href="@{/cart/remove/{id}(id=${item.product.id})}" style="color: #ef4444; font-weight: 700; font-size: 0.9rem; text-decoration: none; padding: 8px;">Remove</a>
+                    </div>
+                </div>
             </div>
+
+            <!-- Checkout Form & Summary -->
+            <div>
+                <div class="card">
+                    <h3 class="mb-4">Order Summary</h3>
+                    
+                    <div class="summary-row">
+                        <span>Items Subtotal</span>
+                        <span th:text="'Rs.' + ${#numbers.formatDecimal(totalAmount, 1, 2)}">Rs.0.00</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span style="color: var(--accent); font-weight: 600;">FREE</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Grand Total</span>
+                        <span th:text="'Rs.' + ${#numbers.formatDecimal(totalAmount, 1, 2)}">Rs.0.00</span>
+                    </div>
+
+                    <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 24px 0;">
+
+                    <h3 class="mb-4">Delivery Details</h3>
+                    <form th:action="@{/checkout/process}" method="post">
+                        
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" name="customerName" th:value="${currentUser != null ? currentUser.fullName : ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="customerPhone" th:value="${currentUser != null ? currentUser.phone : ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Complete Delivery Address</label>
+                            <textarea name="deliveryAddress" rows="3" required placeholder="House No, Street, Landmark, City, Pincode"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Payment Method</label>
+                            <div style="background: rgba(15, 23, 42, 0.5); border: 1px solid var(--accent); border-radius: 12px; padding: 16px;">
+                                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #ffffff; font-size: 1rem; margin-bottom: 0;">
+                                    <input type="radio" name="paymentMode" value="Cash On Delivery (COD)" checked style="width: auto;"> 
+                                    Cash On Delivery (COD)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-checkout">Place Order & Download Bill ➔</button>
+                    </form>
+                </div>
+            </div>
+            
         </div>
     </div>
 

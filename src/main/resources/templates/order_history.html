@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Patan Organic</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+    <div class="container">
+        <h1 class="mb-4">📦 My Order History</h1>
+        
+        <div th:if="${orders.isEmpty()}" class="card text-center" style="padding: 60px;">
+            <h3 style="color: var(--text-muted); margin-bottom: 24px;">You haven't placed any orders yet.</h3>
+            <a th:href="@{/catalog}" class="btn-primary" style="display: inline-block;">Start Shopping</a>
+        </div>
+
+        <div th:if="${!orders.isEmpty()}" class="card">
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date & Time</th>
+                            <th>Total Amount</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Invoice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="o : ${orders}">
+                            <td th:text="${o.orderId}" style="font-weight: 700; color: #ffffff;">ORG-1001</td>
+                            <td th:text="${o.timestamp}" style="color: var(--text-muted); font-size: 0.85rem;">2026-08-07</td>
+                            <td th:text="'Rs.' + ${#numbers.formatDecimal(o.totalAmount, 1, 2)}" style="font-weight: 700; color: var(--accent);">Rs.280.00</td>
+                            <td><span class="badge badge-warning" th:text="${o.paymentMode}">COD</span></td>
+                            <td><span class="badge badge-success" th:text="${o.status}">CONFIRMED</span></td>
+                            <td>
+                                <a th:href="@{/invoice/{orderId}(orderId=${o.orderId})}" class="btn-primary" style="padding: 6px 12px; font-size: 0.8rem; display: inline-block;">PDF</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

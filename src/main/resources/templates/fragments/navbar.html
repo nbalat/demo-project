@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+<nav th:fragment="navbar" class="navbar">
+    <a th:href="@{/catalog}" class="nav-brand">
+        🌱 Patan Organic
+    </a>
+    <div class="nav-links">
+        <span sec:authorize="isAuthenticated()" style="font-size: 0.85rem; color: var(--accent); font-weight: 600;">
+            Hi, <span sec:authentication="name">user</span>
+        </span>
+        <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="@{/admin/dashboard}" class="btn-admin">👑 Admin Dashboard</a>
+        <a th:href="@{/cart}" class="nav-item">🛒 Cart</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="nav-item">Logout</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="btn-primary">Sign In</a>
+    </div>
+</nav>
+
+</body>
+</html>

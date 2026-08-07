@@ -4,93 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Organic Store Admin Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-        body { background: #0f172a; color: #f8fafc; min-height: 100vh; }
-        
-        nav.navbar {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 14px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .nav-brand { font-size: 1.3rem; font-weight: 800; color: #f59e0b; text-decoration: none; }
-        .nav-item { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; font-weight: 600; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
-        h1 { font-size: 1.6rem; font-weight: 800; color: #ffffff; margin-bottom: 6px; }
-        p.subtitle { font-size: 0.9rem; color: #94a3b8; margin-bottom: 24px; }
-
-        .card { background: rgba(30, 41, 59, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; padding: 20px; margin-bottom: 28px; }
-
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 14px; }
-        label { display: block; font-size: 0.8rem; font-weight: 600; color: #cbd5e1; margin-bottom: 4px; }
-        input[type="text"], input[type="number"], input[type="file"], select, textarea {
-            width: 100%;
-            padding: 10px 12px;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 0.9rem;
-            outline: none;
-        }
-
-        .btn-add {
-            background: #d97706;
-            color: #ffffff;
-            border: none;
-            padding: 11px 22px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.92rem;
-            cursor: pointer;
-            transition: background 0.15s ease;
-        }
-        .btn-add:hover { background: #f59e0b; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.08); font-size: 0.9rem; }
-        th { background: rgba(15, 23, 42, 0.5); color: #cbd5e1; font-weight: 700; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px; }
         
         .btn-edit { color: #38bdf8; text-decoration: none; font-weight: 700; font-size: 0.85rem; margin-right: 12px; }
+        .btn-edit:hover { color: #7dd3fc; }
+        
         .btn-del { color: #ef4444; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
-        .prod-thumb { width: 42px; height: 42px; border-radius: 6px; object-fit: cover; background: #1e293b; }
+        .btn-del:hover { color: #f87171; }
+        
+        .prod-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: #1e293b; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        h1 { margin-bottom: 8px; font-size: 2rem; color: #f59e0b; }
+        .subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 32px; }
+        
+        .btn-add {
+            background: rgba(217, 119, 6, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-add:hover { background: rgba(217, 119, 6, 0.3); border-color: #fbbf24; color: #fde68a; }
+        
+        .cancel-link {
+            color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;
+        }
+        .cancel-link:hover { color: var(--text-main); }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <a th:href="@{/admin/dashboard}" class="nav-brand">👑 Admin Dashboard</a>
-        <div>
-            <a th:href="@{/catalog}" class="nav-item" style="margin-right: 14px;">🛍️ Storefront</a>
-            <a th:href="@{/logout}" class="nav-item">Logout</a>
-        </div>
-    </nav>
+    <!-- Unified Top Navigation Bar -->
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
     <div class="container">
-        <h1>👑 Product Management & Inventory CRUD</h1>
-        <p class="subtitle">Add, edit prices, upload photos from disk, update stock, and delete organic food products.</p>
+        <h1>👑 Admin Dashboard</h1>
+        <p class="subtitle">Manage products, inventory, and track customer orders efficiently.</p>
 
         <!-- Add / Edit Organic Product Form -->
-        <div class="card">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; color: #f59e0b;"
-                th:text="${isEditing ? '✏️ Edit Organic Product (ID: ' + product.id + ')' : '+ Add New Organic Food Item'}">
-                + Add New Organic Food Item
+        <div class="card mb-4">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: #f59e0b;"
+                th:text="${isEditing ? '✏️ Edit Organic Product (ID: ' + product.id + ')' : '✨ Add New Organic Food Item'}">
+                ✨ Add New Organic Food Item
             </h3>
             
             <form th:action="@{/admin/product/save}" method="post" enctype="multipart/form-data" th:object="${product}">
                 <input type="hidden" th:field="*{id}" />
 
                 <div class="form-grid">
-                    <div>
+                    <div class="form-group">
                         <label for="name">Product Name *</label>
                         <input type="text" id="name" th:field="*{name}" placeholder="e.g. Organic Rajma" required>
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="category">Category *</label>
                         <select id="category" th:field="*{category}" required>
                             <option value="Pulses">Pulses, Chana & Val</option>
@@ -100,109 +73,113 @@
                         </select>
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="price">Price (Rs.) *</label>
                         <input type="number" step="0.01" id="price" th:field="*{price}" placeholder="140.00" required>
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="unit">Unit *</label>
                         <input type="text" id="unit" th:field="*{unit}" placeholder="kg, gm, pack" required>
                     </div>
                 </div>
 
                 <div class="form-grid">
-                    <div>
-                        <label for="imageFile">Upload Photo from Laptop / Disk</label>
+                    <div class="form-group">
+                        <label for="imageFile">Upload Photo from Laptop</label>
                         <input type="file" id="imageFile" name="imageFile" accept="image/*">
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="imageUrl">Or Web Image URL</label>
                         <input type="text" id="imageUrl" th:field="*{imageUrl}" placeholder="https://images.unsplash.com/photo-...">
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="stockQuantity">Stock Quantity *</label>
                         <input type="number" step="0.1" id="stockQuantity" th:field="*{stockQuantity}" placeholder="100.0" required>
                     </div>
                 </div>
 
-                <div style="margin-top: 10px;">
+                <div class="form-group">
                     <label for="description">Product Description</label>
-                    <textarea id="description" th:field="*{description}" rows="2" placeholder="Item details, organic certification, purity details..."></textarea>
+                    <textarea id="description" th:field="*{description}" rows="3" placeholder="Item details, organic certification, purity details..."></textarea>
                 </div>
 
-                <div style="display: flex; gap: 12px; align-items: center; margin-top: 14px;">
-                    <button type="submit" class="btn-add" th:text="${isEditing ? 'Save Changes ➔' : 'Save Product to Database ➔'}">Save Product to Database ➔</button>
-                    <a th:if="${isEditing}" th:href="@{/admin/dashboard}" style="color: #94a3b8; text-decoration: none; font-size: 0.88rem;">Cancel Edit</a>
+                <div style="display: flex; gap: 16px; align-items: center; margin-top: 24px;">
+                    <button type="submit" class="btn-add" th:text="${isEditing ? 'Save Changes ➔' : 'Save Product ➔'}">Save Product ➔</button>
+                    <a th:if="${isEditing}" th:href="@{/admin/dashboard}" class="cancel-link">Cancel Edit</a>
                 </div>
             </form>
         </div>
 
         <!-- Product Inventory Table -->
-        <div class="card">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; color: #ffffff;">Organic Products Inventory (${products.size()})</h3>
+        <div class="card mb-4">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: #ffffff;">Inventory Overview (${products.size()})</h3>
             
-            <table>
-                <thead>
-                    <tr>
-                        <th>Photo</th>
-                        <th>Product Name</th>
-                        <th>Category</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="p : ${products}">
-                        <td>
-                            <img th:src="${p.imageUrl}" class="prod-thumb" alt="Product" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600'">
-                        </td>
-                        <td th:text="${p.name}" style="font-weight: 700; color: #ffffff;">Kabuli Chana</td>
-                        <td th:text="${p.category}" style="color: #34d399;">Pulses</td>
-                        <td th:text="'Rs.' + ${#numbers.formatDecimal(p.price, 1, 2)} + ' / ' + ${p.unit}">Rs.140.00 / kg</td>
-                        <td th:text="${p.stockQuantity} + ' ' + ${p.unit}">100 kg</td>
-                        <td>
-                            <a th:href="@{/admin/dashboard(editId=${p.id})}" class="btn-edit">Edit</a>
-                            <a th:href="@{/admin/product/delete/{id}(id=${p.id})}" class="btn-del" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${products}">
+                            <td>
+                                <img th:src="${p.imageUrl}" class="prod-thumb" alt="Product" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600'">
+                            </td>
+                            <td th:text="${p.name}" style="font-weight: 700; color: #ffffff;">Kabuli Chana</td>
+                            <td><span class="badge badge-success" th:text="${p.category}">Pulses</span></td>
+                            <td th:text="'Rs.' + ${#numbers.formatDecimal(p.price, 1, 2)} + ' / ' + ${p.unit}">Rs.140.00 / kg</td>
+                            <td th:text="${p.stockQuantity} + ' ' + ${p.unit}">100 kg</td>
+                            <td>
+                                <a th:href="@{/admin/dashboard(editId=${p.id})}" class="btn-edit">Edit</a>
+                                <a th:href="@{/admin/product/delete/{id}(id=${p.id})}" class="btn-del" onclick="return confirm('Are you sure you want to delete this item?');">Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Orders History Table -->
         <div class="card">
-            <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 14px; color: #ffffff;">Customer Orders (${orders.size()})</h3>
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 20px; color: #ffffff;">Customer Orders (${orders.size()})</h3>
             
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Customer</th>
-                        <th>Phone</th>
-                        <th>Payment</th>
-                        <th>Amount</th>
-                        <th>Date & Time</th>
-                        <th>Invoice</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="o : ${orders}">
-                        <td th:text="${o.orderId}" style="font-weight: 700; color: #f59e0b;">ORG-1001</td>
-                        <td th:text="${o.customerName}">Ramesh Patel</td>
-                        <td th:text="${o.customerPhone}">9876543220</td>
-                        <td th:text="${o.paymentMode}" style="color: #34d399;">COD</td>
-                        <td th:text="'Rs.' + ${#numbers.formatDecimal(o.totalAmount, 1, 2)}" style="font-weight: 700; color: #34d399;">Rs.280.00</td>
-                        <td th:text="${o.timestamp}">2026-08-07 00:00:00</td>
-                        <td>
-                            <a th:href="@{/invoice/{orderId}(orderId=${o.orderId})}" style="color: #34d399; font-weight: 700; text-decoration: none;">Download PDF</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Phone</th>
+                            <th>Payment</th>
+                            <th>Amount</th>
+                            <th>Date & Time</th>
+                            <th>Invoice</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="o : ${orders}">
+                            <td th:text="${o.orderId}" style="font-weight: 700; color: #f59e0b;">ORG-1001</td>
+                            <td th:text="${o.customerName}">Ramesh Patel</td>
+                            <td th:text="${o.customerPhone}">9876543220</td>
+                            <td><span class="badge badge-warning" th:text="${o.paymentMode}">COD</span></td>
+                            <td th:text="'Rs.' + ${#numbers.formatDecimal(o.totalAmount, 1, 2)}" style="font-weight: 700; color: var(--accent);">Rs.280.00</td>
+                            <td th:text="${o.timestamp}" style="color: var(--text-muted); font-size: 0.85rem;">2026-08-07 00:00:00</td>
+                            <td>
+                                <a th:href="@{/invoice/{orderId}(orderId=${o.orderId})}" class="btn-primary" style="padding: 6px 12px; font-size: 0.8rem; display: inline-block;">Download PDF</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
