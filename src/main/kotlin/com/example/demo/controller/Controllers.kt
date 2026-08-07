@@ -284,7 +284,7 @@ class AdminController(
         val products = productRepository.findAllByOrderByNameAsc()
         val orders = orderRepository.findAllByOrderByTimestampDesc()
 
-        val editingProduct = if (editId != null) {
+        val editingProduct = if (editId != null && editId > 0) {
             productRepository.findById(editId).orElse(ProductEntity())
         } else {
             ProductEntity()
@@ -293,32 +293,52 @@ class AdminController(
         model.addAttribute("products", products)
         model.addAttribute("orders", orders)
         model.addAttribute("product", editingProduct)
-        model.addAttribute("isEditing", editId != null)
+        model.addAttribute("isEditing", editId != null && editId > 0)
         return "admin_dashboard"
     }
 
     @PostMapping("/product/save")
     fun saveProduct(
-        @ModelAttribute product: ProductEntity,
-        @RequestParam("imageFile", required = false) imageFile: MultipartFile?
+        @RequestParam(name = "id", required = false) id: Long?,
+        @RequestParam("name") name: String,
+        @RequestParam("category") category: String,
+        @RequestParam("price") price: Double,
+        @RequestParam("unit") unit: String,
+        @RequestParam(name = "stockQuantity", defaultValue = "100.0") stockQuantity: Double,
+        @RequestParam(name = "description", defaultValue = "") description: String,
+        @RequestParam(name = "imageUrl", defaultValue = "") imageUrlParam: String,
+        @RequestParam(name = "imageFile", required = false) imageFile: MultipartFile?
     ): String {
+        val product = if (id != null && id > 0) {
+            productRepository.findById(id).orElse(ProductEntity())
+        } else {
+            ProductEntity()
+        }
+
+        product.name = name.trim()
+        product.category = category.trim()
+        product.price = price
+        product.unit = unit.trim()
+        product.stockQuantity = stockQuantity
+        product.description = description.trim()
+
         // Handle image file upload if selected by admin
         if (imageFile != null && !imageFile.isEmpty) {
-            val uploadDir = File("uploads")
-            if (!uploadDir.exists()) uploadDir.mkdirs()
+            try {
+                val uploadDir = File("uploads")
+                if (!uploadDir.exists()) uploadDir.mkdirs()
 
-            val cleanOriginalName = imageFile.originalFilename?.replace("\\s+".toRegex(), "_") ?: "photo.jpg"
-            val uniqueFileName = "prod_${System.currentTimeMillis()}_$cleanOriginalName"
-            val destinationFile = File(uploadDir, uniqueFileName)
+                val cleanOriginalName = imageFile.originalFilename?.replace("[^a-zA-Z0-9._-]".toRegex(), "_") ?: "photo.jpg"
+                val uniqueFileName = "prod_${System.currentTimeMillis()}_$cleanOriginalName"
+                val destinationFile = File(uploadDir, uniqueFileName)
 
-            imageFile.transferTo(destinationFile)
-            product.imageUrl = "/uploads/$uniqueFileName"
-        } else if (product.id != null) {
-            // Keep existing image URL if not updating file
-            val existing = productRepository.findById(product.id!!).orElse(null)
-            if (existing != null && product.imageUrl.isBlank()) {
-                product.imageUrl = existing.imageUrl
+                imageFile.transferTo(destinationFile)
+                product.imageUrl = "/uploads/$uniqueFileName"
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+        } else if (imageUrlParam.isNotBlank()) {
+            product.imageUrl = imageUrlParam.trim()
         }
 
         // Set fallback default image if still blank
